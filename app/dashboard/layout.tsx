@@ -1,13 +1,11 @@
-import Image from 'next/image';
-
 import { PageLayout } from '@/components/core/layouts/page';
 import { BreadcrumbNav } from '@/components/core/shared/navigation/Breadcrumb/BreadcrumbNav';
 import { GlobalNav } from '@/components/core/shared/navigation/GlobalNav/GlobalNav';
 
-export default function Home() {
-  return (
-    <PageLayout navInjection={[<GlobalNav />, <BreadcrumbNav />]}>
-      test
-    </PageLayout>
-  );
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <main>{children}</main>;
 }
