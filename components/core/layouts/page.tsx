@@ -6,8 +6,6 @@ import {
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 
-import { GlobalNav } from '../shared/navigation/GlobalNav/GlobalNav';
-
 export const PageLayout = ({
   children,
   className = "",
@@ -22,16 +20,14 @@ export const PageLayout = ({
       className={cn(
         "relative",
         "min-h-screen",
-        "max-w-7xl",
         "mx-auto",
-        "px-2",
-        "pt-2",
+
         ...className.split(" ")
       )}
       {...rest}
     >
       {navInjection}
-      <div>{children}</div>
+      <div className="w-full bg-background">{children}</div>
     </main>
   );
 };
