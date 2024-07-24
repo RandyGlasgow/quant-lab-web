@@ -1,3 +1,5 @@
+"use client";
+import { LogInIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -7,20 +9,29 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
 import {
   BarChartIcon,
-  BoxIcon,
   GridIcon,
-  GroupIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 
 import { UserSignOut } from "./SignOut";
-import { UserAvatar } from "./UserAvatar";
 import { UserCard } from "./UserCard";
 import { UserDropdownTrigger } from "./UserDropdownTrigger";
 
 export const UserDropdownMenu = () => {
+  const { isSignedIn } = useUser();
+  const auth = useAuth();
+
+  if (!isSignedIn)
+    return (
+      <Button className="gap-2">
+        <SignInButton />
+        <LogInIcon className="w-4 h-4" />
+      </Button>
+    );
+
   return (
     <DropdownMenu>
       <UserDropdownTrigger />
