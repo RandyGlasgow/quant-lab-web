@@ -17,7 +17,9 @@ export const UserDropdownMenu = () => {
   const { isSignedIn, isLoaded } = useUser();
 
   if (!isLoaded)
-    return <div className="w-8 h-8 rounded-md animate-pulse bg-muted" />;
+    return (
+      <div className="w-8 h-8 py-4 rounded-md animate-pulse bg-muted" />
+    );
 
 
   if (!isSignedIn)

@@ -14,12 +14,15 @@ export const StockStrip = () => {
     return <div className="w-full h-9 bg-muted animate-pulse" />;
 
   return (
-    <Marquee pauseOnHover>
-      <div className="flex gap-2 px-1">
-        {data?.results?.map((ticker) => (
-          <Ticker key={ticker.symbol} ticker={ticker} />
-        ))}
-      </div>
-    </Marquee>
+    // blur the background
+    <span className="sticky top-0 backdrop-blur-lg backdrop:bg-white/80">
+      <Marquee pauseOnHover>
+        <div className="sticky top-0 flex gap-2 px-1 py-1">
+          {data?.results?.map((ticker) => (
+            <Ticker key={ticker.symbol} ticker={ticker} />
+          ))}
+        </div>
+      </Marquee>
+    </span>
   );
 };

@@ -27,7 +27,7 @@ export const Ticker: FC<{
           variant="outline"
           className={`${
             isPositive ? "text-green-500" : "text-red-400"
-          } first:pl-2 last:pr-2`}
+          } first:pl-2 last:pr-2 bg-white`}
         >
           {ticker.symbol} ${change.toFixed(2)} ({changePercent.toFixed(2)}
           %)
