@@ -1,27 +1,23 @@
 "use client";
-import { LogInIcon } from "lucide-react";
-import Link from "next/link";
+import { LogInIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
-import {
-  BarChartIcon,
-  GridIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
+    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator
+} from '@/components/ui/dropdown-menu';
+import { SignInButton, useAuth, useUser } from '@clerk/nextjs';
+import { BarChartIcon, GridIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
-import { UserSignOut } from "./SignOut";
-import { UserCard } from "./UserCard";
-import { UserDropdownTrigger } from "./UserDropdownTrigger";
+import { UserSignOut } from './SignOut';
+import { UserCard } from './UserCard';
+import { UserDropdownTrigger } from './UserDropdownTrigger';
 
 export const UserDropdownMenu = () => {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded)
+    return <div className="w-8 h-8 rounded-md animate-pulse bg-muted" />;
 
 
   if (!isSignedIn)
