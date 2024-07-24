@@ -197,7 +197,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-yellow-400 to-yellow-600">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-yellow-400 to-yellow-500">
         <div className="container grid gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
