@@ -34,7 +34,7 @@ export const Ticker: FC<{
         </Button>
       </HoverCardTrigger>
       <HoverCardPortal>
-        <TickerCardContent symbol={ticker.symbol!} />
+        <TickerCardContent ticker={ticker} />
       </HoverCardPortal>
     </HoverCard>
   );

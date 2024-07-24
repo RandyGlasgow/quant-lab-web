@@ -1,14 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import dayjs from "dayjs";
 
-import { getTickerInformation } from '../api/getTickerInformation';
-import { API } from '../types/types';
+import { getSymbolInfo } from "@/api/SymbolInfo/getSymbolInfo";
+import { useQuery } from "@tanstack/react-query";
 
 export const useTickerInformation = (symbol: string) =>
   useQuery({
     queryKey: ["ticker-info", symbol],
     staleTime: 1000 * 60 * 60 * 24,
     queryFn: async () => {
-      const response = await getTickerInformation(symbol);
-      return response.json() as Promise<API["ticker/:symbol"]>;
+      // todays date
+      const date = dayjs().format("YYYY-MM-DD");
+      return await getSymbolInfo(symbol, date);
     },
   });
