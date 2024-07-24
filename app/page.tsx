@@ -1,8 +1,9 @@
-import { BarChartIcon, BriefcaseIcon, PieChartIcon } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { PageLayout } from "@/components/core/layouts/page";
 import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
+import { StockStrip } from "@/components/custom/StockStrip/StockStrip";
 import {
   Avatar,
   AvatarFallback,
@@ -13,7 +14,14 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   return (
-    <PageLayout navInjection={[<GlobalNavBar />]}>
+    <PageLayout
+      navInjection={[
+        <GlobalNavBar />,
+        <Suspense fallback={"loading..."}>
+          <StockStrip />
+        </Suspense>,
+      ]}
+    >
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container grid gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4">

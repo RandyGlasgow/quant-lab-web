@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google';
 
 import { ClerkProvider } from '@clerk/nextjs';
 
+import { ReactQueryProvider } from "./ReactQueryProvider";
+
 import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} dark custom-bg`}>
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

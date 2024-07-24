@@ -22,7 +22,7 @@ import { UserDropdownTrigger } from "./UserDropdownTrigger";
 
 export const UserDropdownMenu = () => {
   const { isSignedIn } = useUser();
-  const auth = useAuth();
+
 
   if (!isSignedIn)
     return (
