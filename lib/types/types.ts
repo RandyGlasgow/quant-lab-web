@@ -5,6 +5,8 @@ import type {
   IDailyOpenClose,
   ITickerDetails,
 } from "@polygon.io/client-js";
+import { NextPageContext } from "next";
+
 export type API = {
   "eod/latest": {
     errors: string[];

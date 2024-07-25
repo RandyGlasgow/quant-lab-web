@@ -27,7 +27,7 @@ export const PageLayout = ({
       {...rest}
     >
       {navInjection}
-      <div className="w-full bg-background">{children}</div>
+      <div className="w-full px-2 mx-auto bg-background">{children}</div>
     </main>
   );
 };

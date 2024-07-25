@@ -1,16 +1,26 @@
-import { Car } from "lucide-react";
+import { NextPage, NextPageContext } from "next";
+import { useParams } from "next/navigation";
 
 import { PageLayout } from "@/components/core/layouts/page";
 import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NewsCard } from "@/components/custom/NewsCard/NewsCard";
+import { PageContextParams } from "@/lib/types/types";
 
-export default function SymbolResearch() {
+const SymbolResearchPage = ({
+  params,
+}: {
+  params: { symbol: string };
+}) => {
   return (
     <PageLayout navInjection={[<GlobalNavBar />]}>
-      <div className="grid grid-cols-4">
-        <div className=""></div>
-        <div className="h-screen col-span-3 bg-blue-400"></div>
+      <div className="grid grid-cols-4 gap-2">
+        <div className="">
+          <NewsCard symbol={params.symbol.toUpperCase()} />
+        </div>
+        <div className="h-[85dvh] col-span-3 bg-blue-400"></div>
       </div>
     </PageLayout>
   );
-}
+};
+
+export default SymbolResearchPage;
