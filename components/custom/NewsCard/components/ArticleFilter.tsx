@@ -22,6 +22,9 @@ export const ArticleFilter: FC<{
         <SelectValue placeholder="All" />
       </SelectTrigger>
       <SelectContent align="end">
+        <SelectItem value={"custom_name"} key={"custom_name"}>
+          All
+        </SelectItem>
         {options.map((option) => (
           <SelectItem key={option} value={option}>
             {option}

@@ -12,7 +12,7 @@ import { ArticleList } from "./ArticleList";
 export const NewsCardClient: FC<{
   initData: ITickerNews["results"];
   symbol: string;
-}> = ({ initData, symbol }) => {
+}> = ({ initData = [], symbol }) => {
   const { data } = useQuery({
     initialData: initData,
     queryKey: ["article-filter", symbol],
@@ -20,7 +20,7 @@ export const NewsCardClient: FC<{
     // poll interval
     refetchInterval: 1_000_000,
   });
-  const [filter, setFilter] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string>("custom_name");
   const deDupedData = data.reduce<Record<string, string>>(
     (acc, current) => {
       if (!current.publisher.name) return acc;
@@ -40,7 +40,9 @@ export const NewsCardClient: FC<{
       </CardHeader>
       <ArticleList
         data={
-          filter ? data.filter((d) => d.publisher.name === filter) : data
+          filter !== "custom_name"
+            ? data.filter((d) => d.publisher.name === filter)
+            : data
         }
       />
     </Card>
