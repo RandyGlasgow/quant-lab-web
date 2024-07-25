@@ -1,10 +1,6 @@
-import { NextPage, NextPageContext } from "next";
-import { useParams } from "next/navigation";
-
 import { PageLayout } from "@/components/core/layouts/page";
 import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
 import { NewsCard } from "@/components/custom/NewsCard/NewsCard";
-import { PageContextParams } from "@/lib/types/types";
 
 const SymbolResearchPage = ({
   params,
