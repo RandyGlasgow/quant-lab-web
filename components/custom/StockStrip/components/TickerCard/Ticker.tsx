@@ -2,16 +2,8 @@ import Link from "next/link";
 import { FC } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { API } from "@/lib/types/types";
 import { numValOrFallback } from "@/lib/utils";
-import { HoverCardPortal } from "@radix-ui/react-hover-card";
-
-import { TickerCardContent } from "./TickerCard";
 
 export const Ticker: FC<{
   ticker: API["eod/latest"]["results"][number];
