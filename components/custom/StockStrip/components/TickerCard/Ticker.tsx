@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FC } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -21,21 +22,17 @@ export const Ticker: FC<{
   const changePercent = (change / numValOrFallback(ticker.open, 1)) * 100;
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button
-          variant="outline"
-          className={`${
-            isPositive ? "text-green-500" : "text-red-400"
-          } first:pl-2 last:pr-2 bg-white`}
-        >
-          {ticker.symbol} ${change.toFixed(2)} ({changePercent.toFixed(2)}
-          %)
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardPortal>
-        <TickerCardContent ticker={ticker} />
-      </HoverCardPortal>
-    </HoverCard>
+    <Button
+      variant="outline"
+      className={`${
+        isPositive ? "text-green-500" : "text-red-400"
+      } first:pl-2 last:pr-2 bg-white`}
+      asChild
+    >
+      <Link href={`/research/${ticker.symbol}`}>
+        {ticker.symbol} ${change.toFixed(2)} ({changePercent.toFixed(2)}
+        %)
+      </Link>
+    </Button>
   );
 };
