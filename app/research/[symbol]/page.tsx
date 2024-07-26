@@ -1,4 +1,5 @@
 import { get } from "http";
+import { Metadata } from "next";
 
 import { getSymbolInfo } from "@/api/SymbolInfo/getSymbolInfo";
 import { PageLayout } from "@/components/core/layouts/page";
@@ -10,13 +11,25 @@ export async function generateMetadata({
   params,
 }: {
   params: { symbol: string };
-}) {
+}): Promise<Metadata> {
   const data = await getSymbolInfo(params.symbol.toUpperCase());
   return {
     title: `${params.symbol.toUpperCase()}: ${data.results?.name}`,
     description: data.results?.description,
-    // set the favicon
-    favicon: data.results?.branding?.icon_url,
+    keywords: data.results?.type,
+    // add image
+    // add favicon
+
+    openGraph: {
+      images: [
+        {
+          url: data.results?.branding?.logo_url ?? "",
+          width: 800,
+          height: 600,
+          alt: `${params.symbol.toUpperCase()}: ${data.results?.name}`,
+        },
+      ],
+    },
   };
 }
 const SymbolResearchPage = ({

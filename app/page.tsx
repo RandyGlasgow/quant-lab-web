@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -11,6 +12,11 @@ import {
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Quant Labs",
+  description: "Research and analysis tools for savvy investors.",
+};
 
 export default function Home() {
   return (
