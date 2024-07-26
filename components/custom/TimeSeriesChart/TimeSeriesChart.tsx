@@ -45,37 +45,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const convertMeasure = (
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-) => {
-  let option = { measure: "day", multiplier: 1, delta: 120 } as Parameters<
-    typeof getTimeSeriesData
-  >[1];
-  switch (measure) {
-    case "1d":
-      option = { measure: "minute", multiplier: 1, delta: 24 * 60 };
-      break;
-    case "5d":
-      option = { measure: "minute", multiplier: 5, delta: 24 * 60 * 5 };
-      break;
-    case "1m":
-      option = { measure: "hour", multiplier: 1, delta: 24 * 30 };
-      break;
-    case "3m":
-      option = { measure: "day", multiplier: 1, delta: 90 };
-      break;
-    case "6m":
-      option = { measure: "day", multiplier: 1, delta: 180 };
-      break;
-    case "1y":
-      option = { measure: "day", multiplier: 1, delta: 365 };
-      break;
-    case "5y":
-      option = { measure: "day", multiplier: 1, delta: 1825 };
-      break;
-  }
-  return option;
-};
+
 
 
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
@@ -96,40 +66,6 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
 
   return (
     <Card className="shadow-none">
-      {/* <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
-        <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>{symbolData?.results?.name}</CardTitle>
-          <CardDescription>
-            {symbolData?.results?.description}
-          </CardDescription>
-        </div>
-        <div className="flex">
-          {["high", "low"].map((key) => {
-            const chart = key as keyof typeof chartConfig;
-            return (
-              <span
-                key={chart}
-                className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-              >
-                <span className="text-xs text-muted-foreground">
-                  {chartConfig[chart].label}
-                </span>
-                {isLoading ? (
-                  <span className="w-40 h-10 text-lg font-bold leading-none sm:text-3xl bg-muted animate-pulse" />
-                ) : (
-                  <span className="w-40 text-lg font-bold leading-none sm:text-3xl">
-                    $
-                    {total[key as keyof typeof total]
-                      .toFixed(2)
-                      .toLocaleString()}
-                  </span>
-                )}
-              </span>
-            );
-          })}
-        </div>
-      </CardHeader> */}
-
       <ChartHeader symbol={symbol} measure={measure} />
       <CardContent className="px-2 sm:p-6">
         <ChartContainer
