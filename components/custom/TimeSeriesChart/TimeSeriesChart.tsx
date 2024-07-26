@@ -39,8 +39,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const queryCache = new QueryCache();
-
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
 }) => {

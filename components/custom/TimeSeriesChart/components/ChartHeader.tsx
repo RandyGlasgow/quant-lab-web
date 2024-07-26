@@ -41,7 +41,7 @@ export const ChartHeader: FC<{ symbol: string; measure: Measure }> = ({
       ),
     [chartData, measure]
   );
-
+  const arrayOpt = ["high", "low"] as const;
   return (
     <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
       <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5 sm:py-6">
@@ -51,7 +51,7 @@ export const ChartHeader: FC<{ symbol: string; measure: Measure }> = ({
         </CardDescription>
       </div>
       <div className="flex">
-        {["high", "low"].map((key) => {
+        {arrayOpt.map((key) => {
           return (
             <span
               key={key}
@@ -64,10 +64,7 @@ export const ChartHeader: FC<{ symbol: string; measure: Measure }> = ({
                 <span className="w-40 h-10 text-lg font-bold leading-none sm:text-3xl bg-muted animate-pulse" />
               ) : (
                 <span className="w-40 text-lg font-bold leading-none sm:text-3xl">
-                  $
-                  {total[key as keyof typeof total]
-                    .toFixed(2)
-                    .toLocaleString()}
+                  ${total?.[key].toFixed(2).toLocaleString()}
                 </span>
               )}
             </span>
