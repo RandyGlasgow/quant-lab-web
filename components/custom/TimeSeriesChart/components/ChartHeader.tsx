@@ -1,23 +1,26 @@
-import React from "react";
+import React, { FC, useMemo } from "react";
 
 import {
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSymbolTimeSeries } from "@/lib/queries/useSymbolTimeSeries";
+import {
+  Measure,
+  useSymbolTimeSeries,
+} from "@/lib/queries/useSymbolTimeSeries";
 import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 
-export const ChartHeader: React.FC<{
-  symbol: string;
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y";
-}> = ({ symbol, measure }) => {
+export const ChartHeader: FC<{ symbol: string; measure: Measure }> = ({
+  symbol,
+  measure,
+}) => {
   const { data: symbolData } = useTickerInformation(symbol);
   const { data: chartData, isLoading } = useSymbolTimeSeries(
     symbol,
     measure
   );
-  const total = React.useMemo(
+  const total = useMemo(
     () =>
       chartData?.reduce<{ high: number; low: number }>(
         (acc, curr) => {

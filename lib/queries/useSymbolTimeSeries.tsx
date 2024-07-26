@@ -1,9 +1,8 @@
 import { getTimeSeriesData } from "@/api/TimeSeries/getTimeSeriesData";
 import { useQuery } from "@tanstack/react-query";
 
-const getPingRate = (
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-) => {
+export type Measure = "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y";
+const getPingRate = (measure: Measure) => {
   switch (measure) {
     case "1d":
       return 1000 * 60;
@@ -21,9 +20,7 @@ const getPingRate = (
       return 1000 * 60 * 60 * 12;
   }
 };
-const convertMeasure = (
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-) => {
+const convertMeasure = (measure: Measure) => {
   let option = { measure: "day", multiplier: 1, delta: 120 } as Parameters<
     typeof getTimeSeriesData
   >[1];
@@ -52,10 +49,7 @@ const convertMeasure = (
   }
   return option;
 };
-export const useSymbolTimeSeries = (
-  symbol: string,
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-) =>
+export const useSymbolTimeSeries = (symbol: string, measure: Measure) =>
   useQuery({
     initialData: [],
     queryKey: ["time-series-chart", symbol, measure],
