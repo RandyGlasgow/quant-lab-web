@@ -21,8 +21,12 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { numValOrFallback } from "@/lib/utils";
+import { useSymbolTimeSeries } from "@/lib/queries/useSymbolTimeSeries";
+import { useTickerInformation } from "@/lib/queries/useTickerInformation";
+import { formatCurrency, numValOrFallback } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+
+import { ChartHeader } from "./components/ChartHeader";
 
 const DynamicChartToolTip = dynamic(() =>
   import("./components/ChartToolTipContent").then(
@@ -73,26 +77,7 @@ const convertMeasure = (
   return option;
 };
 
-const getPingRate = (
-  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-) => {
-  switch (measure) {
-    case "1d":
-      return 1000 * 60;
-    case "5d":
-      return 1000 * 60 * 5;
-    case "1m":
-      return 1000 * 60 * 15;
-    case "3m":
-      return 1000 * 60 * 30;
-    case "6m":
-      return 1000 * 60 * 60;
-    case "1y":
-      return 1000 * 60 * 60 * 6;
-    case "5y":
-      return 1000 * 60 * 60 * 12;
-  }
-};
+
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
 }) => {
@@ -101,42 +86,21 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   const [measure, setMeasure] = React.useState<
     "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
   >((queryParams.get("measure") as any) ?? "1d");
-  const { data: chartData, isLoading } = useQuery({
-    initialData: [],
-    queryKey: ["time-series-chart", symbol, measure],
-    refetchInterval: getPingRate(measure),
-    queryFn: async () =>
-      getTimeSeriesData(symbol, convertMeasure(measure)),
-  });
+  const { data: symbolData } = useTickerInformation(symbol);
+  const { data: chartData, isLoading } = useSymbolTimeSeries(
+    symbol,
+    measure
+  );
 
   const showTime = measure.includes("d");
-  const total = React.useMemo(
-    () =>
-      chartData?.reduce<{ high: number; low: number }>(
-        (acc, curr) => {
-          if (curr.h && acc.high < curr.h) {
-            acc.high = curr.h;
-          }
-          if (curr.l && acc.low > curr.l) {
-            acc.low = curr.l;
-          }
-          return acc;
-        },
-        {
-          high: 0,
-          low: Infinity,
-        }
-      ),
-    [chartData, measure, showTime]
-  );
 
   return (
     <Card className="shadow-none">
-      <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
+      {/* <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
         <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Line Chart - Interactive</CardTitle>
+          <CardTitle>{symbolData?.results?.name}</CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            {symbolData?.results?.description}
           </CardDescription>
         </div>
         <div className="flex">
@@ -164,8 +128,9 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
             );
           })}
         </div>
-      </CardHeader>
+      </CardHeader> */}
 
+      <ChartHeader symbol={symbol} measure={measure} />
       <CardContent className="px-2 sm:p-6">
         <ChartContainer
           config={chartConfig}
@@ -194,19 +159,13 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
               }}
             />
             <YAxis
-              domain={[
-                // set the domain floor to be the low - 15% of the range
-                total.low - (total.high - total.low) * 0.15,
-
-                // set the domain ceiling to be the high + 15% of the range
-                total.high + (total.high - total.low) * 0.15,
-              ]}
+              domain={["auto", "auto"]}
               tickLine={true}
               tickMargin={2}
               type="number"
               dataKey={"vw"}
               tickFormatter={(value) =>
-                `${numValOrFallback(value).toFixed(0)}`
+                `${formatCurrency(numValOrFallback(value, 0))}`
               }
             />
 
