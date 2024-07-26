@@ -24,7 +24,7 @@ export const CardGroup: FC<{
   const { data, isFetching } = useQuery({
     initialData: initialData,
     queryKey: ["snapshot-ticker", symbol],
-    refetchInterval: 1000 * 5,
+    refetchInterval: 1000 * 60,
     queryFn: async () => await getSymbolSnapshot(symbol),
   });
 
