@@ -21,7 +21,10 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSymbolTimeSeries } from "@/lib/queries/useSymbolTimeSeries";
+import {
+  Measure,
+  useSymbolTimeSeries,
+} from "@/lib/queries/useSymbolTimeSeries";
 import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 import { formatCurrency, numValOrFallback } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -53,10 +56,10 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
 }) => {
   const queryParams = useSearchParams();
   const router = useRouter();
-  const [measure, setMeasure] = React.useState<
-    "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-  >((queryParams.get("measure") as any) ?? "1d");
-  const { data: symbolData } = useTickerInformation(symbol);
+  const [measure, setMeasure] = React.useState<Measure>(
+    (queryParams.get("measure") as any) ?? "1d"
+  );
+
   const { data: chartData, isLoading } = useSymbolTimeSeries(
     symbol,
     measure
