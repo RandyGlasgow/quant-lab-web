@@ -7,7 +7,11 @@ import { NewsCard } from "@/components/custom/NewsCard/NewsCard";
 import { TimeSeriesChart } from "@/components/custom/TimeSeriesChart/TimeSeriesChart";
 import { d } from "@tanstack/react-query-devtools/build/legacy/devtools-PtxSnd7z";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { symbol: string };
+}) {
   const data = await getSymbolInfo(params.symbol.toUpperCase());
   return {
     title: `${params.symbol.toUpperCase()}: ${data.results?.name}`,
