@@ -1,21 +1,16 @@
 "use client";
 
 import dayjs from "dayjs";
+import dynamic from "next/dynamic";
 import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
+import { getTimeSeriesData } from "@/api/TimeSeries/getTimeSeriesData";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -23,11 +18,18 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { API_URL } from "@/constants/endpoints";
+import { formatCurrency, numValOrFallback } from "@/lib/utils";
 import { IAggsGroupedDaily } from "@polygon.io/client-js";
 import { useQuery } from "@tanstack/react-query";
+
+const DynamicChartToolTip = dynamic(() =>
+  import("./components/ChartToolTipContent").then(
+    (mod) => mod.ChartToolTipContent
+  )
+);
 
 const chartConfig = {
   high: {
@@ -40,40 +42,50 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const reMapNames = (name: string | number | undefined) => {
-  switch (name) {
-    case "h":
-      return "High";
-    case "l":
-      return "Low";
-    case "vw":
-      return "V. Weight";
-    default:
-      return name;
+const convertMeasure = (
+  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
+) => {
+  let option = { measure: "day", multiplier: 1, delta: 120 } as Parameters<
+    typeof getTimeSeriesData
+  >[1];
+  switch (measure) {
+    case "1d":
+      option = { measure: "minute", multiplier: 1, delta: 24 * 60 };
+      break;
+    case "5d":
+      option = { measure: "hour", multiplier: 1, delta: 24 * 5 };
+      break;
+    case "1m":
+      option = { measure: "hour", multiplier: 1, delta: 24 * 30 };
+      break;
+    case "3m":
+      option = { measure: "day", multiplier: 1, delta: 90 };
+      break;
+    case "6m":
+      option = { measure: "day", multiplier: 1, delta: 180 };
+      break;
+    case "1y":
+      option = { measure: "day", multiplier: 1, delta: 365 };
+      break;
+    case "5y":
+      option = { measure: "day", multiplier: 1, delta: 1825 };
+      break;
   }
+  return option;
 };
 
-type ChartToolTipComponentProps = React.ComponentProps<
-  typeof ChartTooltipContent
-> & {
-  payload: IAggsGroupedDaily["results"][number];
-};
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
 }) => {
+  const [measure, setMeasure] = React.useState<
+    "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
+  >("3m");
   const { data: chartData, isLoading } = useQuery({
     initialData: [],
-    queryKey: ["time-series-chart", symbol],
-    refetchInterval: 1000 * 10,
-    queryFn: async () => {
-      const resp = await fetch(
-        `${API_URL}/gateway/${symbol.toUpperCase()}/time_series?measure=day&multiplier=1&delta=120`
-      );
-      if (!resp.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      return resp.json() as Promise<IAggsGroupedDaily["results"]>;
-    },
+    queryKey: ["time-series-chart", symbol, measure],
+    refetchInterval: 1000 * 60 * 5,
+    queryFn: async () =>
+      getTimeSeriesData(symbol, convertMeasure(measure)),
   });
 
   const total = React.useMemo(
@@ -131,110 +143,98 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
           })}
         </div>
       </CardHeader>
+
       <CardContent className="px-2 sm:p-6">
         <ChartContainer
           config={chartConfig}
-          className={`aspect-auto h-[250px] w-full ${
+          className={`aspect-auto lg:h-[400px] h-[250px] w-full ${
             isLoading ? "bg-muted animate-pulse" : ""
           }`}
         >
-          {!isLoading && (
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{
-                left: 10,
-              }}
-            >
-              <CartesianGrid vertical={true} additive="replace" />
-              <XAxis
-                dataKey="t"
-                tickLine={true}
-                axisLine={true}
-                tickMargin={8}
-                minTickGap={8}
-                tickFormatter={(value) => dayjs(value).format("MMM DD")}
-              />
-              <YAxis
-                domain={[total.low - 10, total.high + 10]}
-                axisLine={true}
-                tickLine={true}
-                tickMargin={8}
-                type="number"
-                label={{
-                  value: "Price",
-                  position: "insideBottomLeft",
-                  angle: -90,
-                }}
-                dataKey={"l"}
-                tickFormatter={(value) => `$${value}`}
-              />
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 10,
+            }}
+          >
+            <CartesianGrid vertical={true} additive="replace" />
+            <XAxis
+              dataKey="t"
+              tickLine={true}
+              axisLine={true}
+              tickMargin={8}
+              minTickGap={8}
+              tickFormatter={(value) => dayjs(value).format("MMM DD")}
+            />
+            <YAxis
+              domain={[total.low - 1, total.high + 1]}
+              tickLine={true}
+              tickMargin={2}
+              type="number"
+              dataKey={"vw"}
+              tickFormatter={(value) =>
+                `${numValOrFallback(value).toFixed(0)}`
+              }
+            />
 
-              <ChartTooltip
-                accessibilityLayer
-                includeHidden
-                content={({ active, label, payload }) => {
-                  const time = payload?.[0]?.payload?.t;
-                  return (
-                    <Card className="rounded-sm w-[150px]">
-                      <CardHeader className="p-2">
-                        <CardTitle>
-                          {dayjs(time).format("ddd MMM DD, YYYY")}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="flex flex-col p-2">
-                        {payload?.map((p) => (
-                          <CardDescription className="grid grid-cols-2 gap-1">
-                            <span>{reMapNames(p.dataKey)}:</span>
-                            <span>
-                              {parseFloat(p.value as string).toFixed(2)}
-                            </span>
-                          </CardDescription>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  );
-                  // <ChartTooltipContent
-                  //   className="w-[150px] bg-white shadow-lg"
-                  //   nameKey="time"
-                  //   labelFormatter={(value) => {
-                  //     return dayjs(value).format("ddd MMM DD, YYYY");
-                  //   }}
-                  // ></ChartTooltipContent>;
-                }}
-              />
-              <Line
-                key={"h"}
-                animationDuration={0}
-                dataKey={"h"}
-                type="linear"
-                stroke={`green`}
-                strokeWidth={2}
-                dot={false}
-                glyphName={"high"}
-              />
-              <Line
-                key={"l"}
-                animationDuration={0}
-                dataKey={"l"}
-                type="linear"
-                stroke={`red`}
-                strokeWidth={2}
-                strokeDasharray={"5 5"}
-                dot={false}
-              />
-              <Line
-                key={"vw"}
-                className="fill-yellow-500"
-                animationDuration={0}
-                dataKey={"vw"}
-                stroke={`#eab308`}
-                dot={false}
-              />
-            </LineChart>
-          )}
+            <ChartTooltip
+              accessibilityLayer
+              includeHidden
+              content={<DynamicChartToolTip />}
+            />
+            <Line
+              key={"h"}
+              animationDuration={0}
+              dataKey={"h"}
+              type="linear"
+              stroke={`green`}
+              strokeWidth={2}
+              glyphName={"high"}
+              dot={false}
+            />
+            <Line
+              key={"l"}
+              animationDuration={0}
+              dataKey={"l"}
+              type="linear"
+              stroke={`red`}
+              strokeWidth={2}
+              strokeDasharray={"5 5"}
+              dot={false}
+            />
+            <Line
+              key={"vw"}
+              type={"basis"}
+              className="fill-blue-500"
+              animationDuration={0}
+              dataKey={"vw"}
+              stroke={`#3b82f6`}
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex items-center justify-between">
+        <span></span>
+        <span>
+          <Tabs
+            defaultValue={measure}
+            onValueChange={(v) => setMeasure(v as any)}
+          >
+            <TabsList>
+              <TabsTrigger value="1d">1d</TabsTrigger>
+              <TabsTrigger value="5d">5d</TabsTrigger>
+              <TabsTrigger value="1m">1m</TabsTrigger>
+              <TabsTrigger value="3m">3m</TabsTrigger>
+              <TabsTrigger value="6m">6m</TabsTrigger>
+              <TabsTrigger value="1y">1y</TabsTrigger>
+              <TabsTrigger value="5y">5y</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </span>
+      </CardFooter>
     </Card>
   );
 };

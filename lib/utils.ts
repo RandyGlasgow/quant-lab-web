@@ -11,3 +11,11 @@ export const numValOrFallback = (
 ) => {
   return val ?? fallback;
 };
+
+export const formatCurrency = (val: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    compactDisplay: "long",
+  }).format(val);
+};
