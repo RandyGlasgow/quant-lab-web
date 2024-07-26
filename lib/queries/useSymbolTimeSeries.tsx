@@ -52,9 +52,9 @@ const convertMeasure = (measure: Measure) => {
 };
 export const useSymbolTimeSeries = (symbol: string, measure: Measure) =>
   useQuery({
-    initialData: [],
     queryKey: ["time-series-chart", symbol, measure],
     refetchInterval: getPingRate(measure),
+    staleTime: getPingRate(measure),
     queryFn: async () =>
       getTimeSeriesData(symbol, convertMeasure(measure)),
   });

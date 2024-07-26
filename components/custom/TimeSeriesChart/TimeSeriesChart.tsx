@@ -18,6 +18,7 @@ import {
   useSymbolTimeSeries,
 } from "@/lib/queries/useSymbolTimeSeries";
 import { formatCurrency, numValOrFallback } from "@/lib/utils";
+import { QueryCache } from "@tanstack/react-query";
 
 import { ChartHeader } from "./components/ChartHeader";
 
@@ -38,8 +39,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-
-
+const queryCache = new QueryCache();
 
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
@@ -54,6 +54,13 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
     symbol,
     measure
   );
+
+  const [hoveredMeasure, setHoveredMeasure] =
+    React.useState<Measure>("1m");
+  useSymbolTimeSeries(symbol, hoveredMeasure);
+  const handleHover = (val: Measure) => {
+    setHoveredMeasure(val);
+  };
 
   // is generally up trend bull
   const isTrendingUp =
@@ -128,22 +135,57 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
           <Tabs
             defaultValue={measure}
             onValueChange={(v) => {
-              // replace the current URL with the new measure
-              const queryParam = new URLSearchParams(queryParams);
               const url = new URL(window.location.href);
               url.searchParams.set("measure", v as string);
-              router.push(url.toString());
+              router.push(url.toString(), { scroll: false });
               setMeasure(v as any);
             }}
           >
             <TabsList>
-              <TabsTrigger value="1d">1d</TabsTrigger>
-              <TabsTrigger value="5d">5d</TabsTrigger>
-              <TabsTrigger value="1m">1m</TabsTrigger>
-              <TabsTrigger value="3m">3m</TabsTrigger>
-              <TabsTrigger value="6m">6m</TabsTrigger>
-              <TabsTrigger value="1y">1y</TabsTrigger>
-              <TabsTrigger value="5y">5y</TabsTrigger>
+              <TabsTrigger
+                value="1d"
+                onMouseEnter={() => {
+                  handleHover("1d");
+                }}
+              >
+                1d
+              </TabsTrigger>
+              <TabsTrigger
+                value="5d"
+                onMouseEnter={() => handleHover("5d")}
+              >
+                5d
+              </TabsTrigger>
+              <TabsTrigger
+                value="1m"
+                onMouseEnter={() => handleHover("1m")}
+              >
+                1m
+              </TabsTrigger>
+              <TabsTrigger
+                value="3m"
+                onMouseEnter={() => handleHover("3m")}
+              >
+                3m
+              </TabsTrigger>
+              <TabsTrigger
+                value="6m"
+                onMouseEnter={() => handleHover("6m")}
+              >
+                6m
+              </TabsTrigger>
+              <TabsTrigger
+                value="1y"
+                onMouseEnter={() => handleHover("1y")}
+              >
+                1y
+              </TabsTrigger>
+              <TabsTrigger
+                value="5y"
+                onMouseEnter={() => handleHover("5y")}
+              >
+                5y
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </span>
