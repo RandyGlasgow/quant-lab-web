@@ -47,7 +47,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   const queryParams = useSearchParams();
   const router = useRouter();
   const [measure, setMeasure] = React.useState<Measure>(
-    (queryParams.get("measure") as any) ?? "1d"
+    (queryParams.get("measure") as any) ?? "5d"
   );
 
   const { data: chartData, isLoading } = useSymbolTimeSeries(
