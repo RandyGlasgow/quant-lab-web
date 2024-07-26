@@ -27,15 +27,17 @@ export const ChartToolTipContent: React.FC<
     : dayjs(time).format("ddd MMM DD, YYYY");
 
   return (
-    <Card className="rounded-sm w-[200px]">
+    <Card className="rounded-sm w-[200px] shadow-xl">
       <CardHeader className="p-2">
         <CardTitle>{formattedTime}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col p-2">
         {payload?.map((p) => (
           <CardDescription className="grid grid-cols-2 gap-1" key={p.name}>
-            <span>{reMapNames(p.dataKey)}:</span>
-            <span>{formatCurrency(parseFloat(p.value as string))}</span>
+            <div>{reMapNames(p.dataKey)}:</div>
+            <div className="text-right">
+              {formatCurrency(parseFloat(p.value as string))}
+            </div>
           </CardDescription>
         ))}
       </CardContent>

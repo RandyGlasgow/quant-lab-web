@@ -2,6 +2,7 @@
 
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
@@ -20,9 +21,7 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { API_URL } from "@/constants/endpoints";
-import { formatCurrency, numValOrFallback } from "@/lib/utils";
-import { IAggsGroupedDaily } from "@polygon.io/client-js";
+import { numValOrFallback } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 
 const DynamicChartToolTip = dynamic(() =>
@@ -53,7 +52,7 @@ const convertMeasure = (
       option = { measure: "minute", multiplier: 1, delta: 24 * 60 };
       break;
     case "5d":
-      option = { measure: "hour", multiplier: 1, delta: 24 * 5 };
+      option = { measure: "minute", multiplier: 5, delta: 24 * 60 * 5 };
       break;
     case "1m":
       option = { measure: "hour", multiplier: 1, delta: 24 * 30 };
@@ -74,16 +73,38 @@ const convertMeasure = (
   return option;
 };
 
+const getPingRate = (
+  measure: "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
+) => {
+  switch (measure) {
+    case "1d":
+      return 1000 * 60;
+    case "5d":
+      return 1000 * 60 * 5;
+    case "1m":
+      return 1000 * 60 * 15;
+    case "3m":
+      return 1000 * 60 * 30;
+    case "6m":
+      return 1000 * 60 * 60;
+    case "1y":
+      return 1000 * 60 * 60 * 6;
+    case "5y":
+      return 1000 * 60 * 60 * 12;
+  }
+};
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
 }) => {
+  const queryParams = useSearchParams();
+  const router = useRouter();
   const [measure, setMeasure] = React.useState<
     "1d" | "5d" | "1m" | "3m" | "6m" | "1y" | "5y"
-  >("3m");
+  >((queryParams.get("measure") as any) ?? "1d");
   const { data: chartData, isLoading } = useQuery({
     initialData: [],
     queryKey: ["time-series-chart", symbol, measure],
-    refetchInterval: 1000 * 60 * 5,
+    refetchInterval: getPingRate(measure),
     queryFn: async () =>
       getTimeSeriesData(symbol, convertMeasure(measure)),
   });
@@ -106,7 +127,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
           low: Infinity,
         }
       ),
-    [chartData]
+    [chartData, measure, showTime]
   );
 
   return (
@@ -159,17 +180,27 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
               left: 10,
             }}
           >
-            <CartesianGrid vertical={true} additive="replace" />
+            <CartesianGrid vertical={true} />
             <XAxis
               dataKey="t"
               tickLine={true}
               axisLine={true}
               tickMargin={8}
-              minTickGap={8}
-              tickFormatter={(value) => dayjs(value).format("MMM DD")}
+              minTickGap={20}
+              tickFormatter={(value) => {
+                return showTime
+                  ? dayjs(value).format("ddd, h:mm A")
+                  : dayjs(value).format("MMM DD");
+              }}
             />
             <YAxis
-              domain={[total.low - 1, total.high + 1]}
+              domain={[
+                // set the domain floor to be the low - 15% of the range
+                total.low - (total.high - total.low) * 0.15,
+
+                // set the domain ceiling to be the high + 15% of the range
+                total.high + (total.high - total.low) * 0.15,
+              ]}
               tickLine={true}
               tickMargin={2}
               type="number"
@@ -222,7 +253,14 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
         <span>
           <Tabs
             defaultValue={measure}
-            onValueChange={(v) => setMeasure(v as any)}
+            onValueChange={(v) => {
+              // replace the current URL with the new measure
+              const queryParam = new URLSearchParams(queryParams);
+              const url = new URL(window.location.href);
+              url.searchParams.set("measure", v as string);
+              router.push(url.toString());
+              setMeasure(v as any);
+            }}
           >
             <TabsList>
               <TabsTrigger value="1d">1d</TabsTrigger>
