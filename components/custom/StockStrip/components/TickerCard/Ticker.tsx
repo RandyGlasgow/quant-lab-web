@@ -11,9 +11,9 @@ import { ISnapshotTickers } from "@polygon.io/client-js";
 export const Ticker: FC<{
   ticker: Exclude<ISnapshotTickers["tickers"], undefined>[number];
 }> = ({ ticker }) => {
-  const change = ticker.todaysChange!;
+  const change = numValOrFallback(ticker.todaysChange);
   const isPositive = change! > 0;
-  const changePercent = ticker.todaysChangePerc!;
+  const changePercent = numValOrFallback(ticker.todaysChangePerc);
 
   return (
     <Button
@@ -24,7 +24,7 @@ export const Ticker: FC<{
       asChild
     >
       <Link href={`/research/${ticker.ticker}?measure=1d`}>
-        {ticker.ticker} ${change.toFixed(2)} ({changePercent.toFixed(2)}
+        {ticker.ticker} ${change?.toFixed(2)} ({changePercent?.toFixed(2)}
         %)
       </Link>
     </Button>
