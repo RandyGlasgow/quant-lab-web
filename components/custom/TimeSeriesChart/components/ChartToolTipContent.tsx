@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartTooltipContent } from "@/components/ui/chart";
 import { formatCurrency } from "@/lib/utils";
 
 import { reMapNames } from "../utils/reMapNames";
