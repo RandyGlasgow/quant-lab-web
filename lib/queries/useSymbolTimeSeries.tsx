@@ -29,22 +29,22 @@ const convertMeasure = (measure: Measure) => {
       option = { measure: "minute", multiplier: 1, delta: 24 * 60 };
       break;
     case "5d":
-      option = { measure: "minute", multiplier: 5, delta: 24 * 60 * 5 };
+      option = { measure: "minute", multiplier: 5, delta: 24 * 5 * 60 };
       break;
     case "1m":
       option = { measure: "hour", multiplier: 1, delta: 24 * 30 };
       break;
     case "3m":
-      option = { measure: "day", multiplier: 1, delta: 90 };
+      option = { measure: "hour", multiplier: 3, delta: 24 * 30 * 3 };
       break;
     case "6m":
-      option = { measure: "day", multiplier: 1, delta: 180 };
+      option = { measure: "hour", multiplier: 6, delta: 24 * 30 * 6 };
       break;
     case "1y":
       option = { measure: "day", multiplier: 1, delta: 365 };
       break;
     case "5y":
-      option = { measure: "day", multiplier: 1, delta: 1825 };
+      option = { measure: "day", multiplier: 5, delta: 365 * 5 };
       break;
   }
   return option;

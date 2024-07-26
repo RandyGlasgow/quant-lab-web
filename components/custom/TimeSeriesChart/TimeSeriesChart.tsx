@@ -4,17 +4,9 @@ import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { getTimeSeriesData } from "@/api/TimeSeries/getTimeSeriesData";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -25,9 +17,7 @@ import {
   Measure,
   useSymbolTimeSeries,
 } from "@/lib/queries/useSymbolTimeSeries";
-import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 import { formatCurrency, numValOrFallback } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
 
 import { ChartHeader } from "./components/ChartHeader";
 
@@ -65,6 +55,11 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
     measure
   );
 
+  // is generally up trend bull
+  const isTrendingUp =
+    numValOrFallback(chartData?.[1]?.c, 0) <
+    numValOrFallback(chartData?.[chartData.length - 1]?.c, 0);
+
   const showTime = measure.includes("d");
 
   return (
@@ -77,7 +72,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
             isLoading ? "bg-muted animate-pulse" : ""
           }`}
         >
-          <LineChart
+          <AreaChart
             accessibilityLayer
             data={chartData}
             margin={{
@@ -113,37 +108,19 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
               includeHidden
               content={<DynamicChartToolTip showTime={showTime} />}
             />
-            <Line
-              key={"h"}
-              animationDuration={0}
-              dataKey={"h"}
-              type="linear"
-              stroke={`green`}
-              strokeWidth={2}
-              glyphName={"high"}
-              dot={false}
-            />
-            <Line
-              key={"l"}
-              animationDuration={0}
-              dataKey={"l"}
-              type="linear"
-              stroke={`red`}
-              strokeWidth={2}
-              strokeDasharray={"5 5"}
-              dot={false}
-            />
-            <Line
-              key={"vw"}
+
+            <Area
+              key={"c"}
               type={"basis"}
-              className="fill-blue-500"
               animationDuration={0}
-              dataKey={"vw"}
-              stroke={`#3b82f6`}
-              strokeWidth={2}
+              dataKey={"c"}
+              stroke={`${isTrendingUp ? "#22c55e" : "#ef4444"}`}
+              fill={`${isTrendingUp ? "#22c55e" : "#ef4444"}`}
+              fillOpacity={0.2}
+              strokeWidth={1}
               dot={false}
             />
-          </LineChart>
+          </AreaChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
