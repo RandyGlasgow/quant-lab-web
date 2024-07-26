@@ -16,18 +16,11 @@ export const PageLayout = ({
   navInjection?: ReactNode | ReactNode[];
 }) => {
   return (
-    <main
-      className={cn(
-        "relative",
-        "min-h-screen",
-        "mx-auto",
-
-        ...className.split(" ")
-      )}
-      {...rest}
-    >
+    <main className={cn("relative", "min-h-screen", "mx-auto")} {...rest}>
       {navInjection}
-      <div className="w-full px-2 mx-auto bg-background">{children}</div>
+      <div className={cn("w-full px-2 mx-auto bg-background", className)}>
+        {children}
+      </div>
     </main>
   );
 };
