@@ -40,27 +40,34 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const reMap = (data: IAggsGroupedDaily["results"]) => {
-  return data.map((d) => ({
-    time: d.t,
-    high: d.h,
-    low: d.l,
-    avg: d.vw,
-    open: d.o,
-    close: d.c,
-  }));
+const reMapNames = (name: string | number | undefined) => {
+  switch (name) {
+    case "h":
+      return "High";
+    case "l":
+      return "Low";
+    case "vw":
+      return "V. Weight";
+    default:
+      return name;
+  }
 };
 
+type ChartToolTipComponentProps = React.ComponentProps<
+  typeof ChartTooltipContent
+> & {
+  payload: IAggsGroupedDaily["results"][number];
+};
 export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   symbol,
 }) => {
-  const { data, isLoading } = useQuery({
+  const { data: chartData, isLoading } = useQuery({
     initialData: [],
     queryKey: ["time-series-chart", symbol],
     refetchInterval: 1000 * 10,
     queryFn: async () => {
       const resp = await fetch(
-        `${API_URL}/gateway/${symbol.toUpperCase()}/time_series?measure=week&multiplier=1&delta=52`
+        `${API_URL}/gateway/${symbol.toUpperCase()}/time_series?measure=day&multiplier=1&delta=120`
       );
       if (!resp.ok) {
         throw new Error("Failed to fetch data");
@@ -69,17 +76,15 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
     },
   });
 
-  const chartData = React.useMemo(() => reMap(data), [data]);
-
   const total = React.useMemo(
     () =>
       chartData?.reduce<{ high: number; low: number }>(
         (acc, curr) => {
-          if (curr.high && acc.high < curr.high) {
-            acc.high = curr.high;
+          if (curr.h && acc.high < curr.h) {
+            acc.high = curr.h;
           }
-          if (curr.low && acc.low > curr.low) {
-            acc.low = curr.low;
+          if (curr.l && acc.low > curr.l) {
+            acc.low = curr.l;
           }
           return acc;
         },
@@ -92,7 +97,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
   );
 
   return (
-    <Card>
+    <Card className="shadow-none">
       <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
         <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Line Chart - Interactive</CardTitle>
@@ -137,39 +142,71 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
             <LineChart
               accessibilityLayer
               data={chartData}
-              height={150}
               margin={{
-                left: -55,
-                right: -35,
+                left: 10,
               }}
             >
               <CartesianGrid vertical={true} additive="replace" />
               <XAxis
-                dataKey="time"
+                dataKey="t"
                 tickLine={true}
                 axisLine={true}
                 tickMargin={8}
-                minTickGap={16}
+                minTickGap={8}
                 tickFormatter={(value) => dayjs(value).format("MMM DD")}
+              />
+              <YAxis
+                domain={[total.low - 10, total.high + 10]}
+                axisLine={true}
+                tickLine={true}
+                tickMargin={8}
+                type="number"
+                label={{
+                  value: "Price",
+                  position: "insideBottomLeft",
+                  angle: -90,
+                }}
+                dataKey={"l"}
+                tickFormatter={(value) => `$${value}`}
               />
 
               <ChartTooltip
                 accessibilityLayer
                 includeHidden
-                content={
-                  <ChartTooltipContent
-                    className="w-[150px] bg-white shadow-lg"
-                    nameKey="time"
-                    labelFormatter={(value) => {
-                      return dayjs(value).format("ddd MMM DD, YYYY");
-                    }}
-                  />
-                }
+                content={({ active, label, payload }) => {
+                  const time = payload?.[0]?.payload?.t;
+                  return (
+                    <Card className="rounded-sm w-[150px]">
+                      <CardHeader className="p-2">
+                        <CardTitle>
+                          {dayjs(time).format("ddd MMM DD, YYYY")}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="flex flex-col p-2">
+                        {payload?.map((p) => (
+                          <CardDescription className="grid grid-cols-2 gap-1">
+                            <span>{reMapNames(p.dataKey)}:</span>
+                            <span>
+                              {parseFloat(p.value as string).toFixed(2)}
+                            </span>
+                          </CardDescription>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  );
+                  // <ChartTooltipContent
+                  //   className="w-[150px] bg-white shadow-lg"
+                  //   nameKey="time"
+                  //   labelFormatter={(value) => {
+                  //     return dayjs(value).format("ddd MMM DD, YYYY");
+                  //   }}
+                  // ></ChartTooltipContent>;
+                }}
               />
               <Line
-                key={"high"}
+                key={"h"}
                 animationDuration={0}
-                dataKey={"high"}
+                dataKey={"h"}
                 type="linear"
                 stroke={`green`}
                 strokeWidth={2}
@@ -179,7 +216,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
               <Line
                 key={"l"}
                 animationDuration={0}
-                dataKey={"low"}
+                dataKey={"l"}
                 type="linear"
                 stroke={`red`}
                 strokeWidth={2}
@@ -190,7 +227,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
                 key={"vw"}
                 className="fill-yellow-500"
                 animationDuration={0}
-                dataKey={"avg"}
+                dataKey={"vw"}
                 stroke={`#eab308`}
                 dot={false}
               />

@@ -18,7 +18,7 @@ export const Article: FC<ITickerNews["results"][number]> = ({
   keywords,
 }) => {
   return (
-    <Card className="w-full max-w-md overflow-hidden rounded-lg bg-background">
+    <Card className="w-full overflow-hidden rounded-lg bg-background">
       <div className="p-4 space-y-2">
         <h3 className="font-semibold line-clamp-2 text-primary">
           {title.split("-")[0].trim()}

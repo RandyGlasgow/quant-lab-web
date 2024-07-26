@@ -11,12 +11,12 @@ const SymbolResearchPage = ({
   return (
     <PageLayout
       navInjection={[<GlobalNavBar key={"global_nav_bar"} />]}
-      className="grid grid-cols-4 gap-2"
+      className="flex flex-col-reverse gap-2 py-2 lg:grid-cols-4 lg:grid"
     >
       <div id="side-bar" className="">
         <NewsCard symbol={params.symbol.toUpperCase()} />
       </div>
-      <div id="main-content" className="h-[85dvh] col-span-3">
+      <div id="main-content" className="col-span-3">
         <TimeSeriesChart symbol={params.symbol.toUpperCase()} />
       </div>
     </PageLayout>
