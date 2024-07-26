@@ -14,15 +14,22 @@ import { formatCurrency } from "@/lib/utils";
 import { reMapNames } from "../utils/reMapNames";
 
 export type ChartToolTipProps = ComponentProps<typeof ChartTooltipContent>;
-export const ChartToolTipContent: React.FC<ChartToolTipProps> = (
-  params
-) => {
-  const { active, payload, label } = params;
+export const ChartToolTipContent: React.FC<
+  ChartToolTipProps & {
+    showTime?: boolean;
+  }
+> = (params) => {
+  const { active, payload, label, showTime } = params;
   const time = payload?.[0]?.payload?.t;
+
+  const formattedTime = showTime
+    ? dayjs(time).format("ddd MMM DD, YYYY @ h:mm A")
+    : dayjs(time).format("ddd MMM DD, YYYY");
+
   return (
-    <Card className="rounded-sm w-[150px]">
+    <Card className="rounded-sm w-[200px]">
       <CardHeader className="p-2">
-        <CardTitle>{dayjs(time).format("ddd MMM DD, YYYY")}</CardTitle>
+        <CardTitle>{formattedTime}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col p-2">
         {payload?.map((p) => (

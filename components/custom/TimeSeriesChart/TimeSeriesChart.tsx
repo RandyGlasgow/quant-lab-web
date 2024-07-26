@@ -88,6 +88,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
       getTimeSeriesData(symbol, convertMeasure(measure)),
   });
 
+  const showTime = measure.includes("d");
   const total = React.useMemo(
     () =>
       chartData?.reduce<{ high: number; low: number }>(
@@ -181,7 +182,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
             <ChartTooltip
               accessibilityLayer
               includeHidden
-              content={<DynamicChartToolTip />}
+              content={<DynamicChartToolTip showTime={showTime} />}
             />
             <Line
               key={"h"}
