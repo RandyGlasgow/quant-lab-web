@@ -111,8 +111,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = ({
 
             <Area
               key={"c"}
-              type={"basis"}
-              animationDuration={0}
+              type={"linear"}
               dataKey={"c"}
               stroke={`${isTrendingUp ? "#22c55e" : "#ef4444"}`}
               fill={`${isTrendingUp ? "#22c55e" : "#ef4444"}`}
