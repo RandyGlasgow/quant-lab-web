@@ -1,45 +1,51 @@
-import Link from "next/link";
-import { FC } from "react";
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import { FC } from 'react';
 
-import { Card } from "@/components/ui/card";
-import { ITickerNews } from "@polygon.io/client-js";
+import { Card } from '@/components/ui/card';
+import { ITickerNews } from '@polygon.io/client-js';
 
 export const Article: FC<ITickerNews["results"][number]> = ({
-  id,
   published_utc,
   publisher,
-  tickers,
   title,
-  amp_url,
   article_url,
-  author,
   description,
-  image_url,
-  keywords,
 }) => {
+  const titleStr = title.split("-")[0].trim();
+  const descriptionStr = description?.split("-")[0].trim();
   return (
-    <Card className="w-full overflow-hidden rounded-lg bg-background">
-      <div className="p-4 space-y-2">
-        <h3 className="font-semibold line-clamp-2 text-primary">
-          {title.split("-")[0].trim()}
+    <div className="grid gap-2 py-2">
+      {" "}
+      <Link href={article_url!} prefetch={false}>
+        <h3
+          className="font-semibold line-clamp-1 text-primary hover:underline"
+          title={titleStr}
+        >
+          {titleStr}
         </h3>
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {description?.split("-")[0].trim()}
-        </p>
-        <div className="flex items-center justify-between">
-          <cite className="text-xs text-muted-foreground">
-            {new Date(published_utc).toLocaleDateString()} -{" "}
-            {publisher.name}
-          </cite>
+      </Link>
+      <p className="text-sm text-muted-foreground line-clamp-2">
+        {descriptionStr}
+      </p>
+      <div className="flex items-center justify-between">
+        <cite className="text-xs text-muted-foreground">
+          {dayjs(published_utc).format("dddd, MMMM D, YYYY")} -{" "}
           <Link
-            href={article_url!}
-            className="text-sm font-medium text-primary hover:underline"
-            prefetch={false}
+            href={publisher.homepage_url!}
+            className="text-primary hover:underline"
           >
-            Read More
+            {publisher.name}
           </Link>
-        </div>
+        </cite>
+        <Link
+          href={article_url!}
+          className="text-sm font-medium text-primary hover:underline"
+          prefetch={false}
+        >
+          Read More
+        </Link>
       </div>
-    </Card>
+    </div>
   );
 };

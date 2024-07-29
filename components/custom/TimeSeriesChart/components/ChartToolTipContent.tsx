@@ -1,17 +1,12 @@
-import dayjs from "dayjs";
-import { ComponentProps } from "react";
+import dayjs from 'dayjs';
+import { parse } from 'path';
+import { ComponentProps } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ChartTooltipContent } from "@/components/ui/chart";
-import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartTooltipContent } from '@/components/ui/chart';
+import { formatCurrency } from '@/lib/utils';
 
-import { reMapNames } from "../utils/reMapNames";
+import { reMapNames } from '../utils/reMapNames';
 
 export type ChartToolTipProps = ComponentProps<typeof ChartTooltipContent>;
 export const ChartToolTipContent: React.FC<

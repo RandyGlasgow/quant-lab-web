@@ -1,19 +1,10 @@
-import { get } from "http";
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
-import { getSymbolInfo } from "@/api/SymbolInfo/getSymbolInfo";
-import { PageLayout } from "@/components/core/layouts/page";
-import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
-import { NewsCard } from "@/components/custom/NewsCard/NewsCard";
-import { StockDetails } from "@/components/custom/StockDetails/StockDetails";
-import { TimeSeriesChart } from "@/components/custom/TimeSeriesChart/TimeSeriesChart";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { getSymbolInfo } from '@/api/SymbolInfo/getSymbolInfo';
+import { PageLayout } from '@/components/core/layouts/page';
+import { GlobalNavBar } from '@/components/custom/GlobalNavBar/GlobalNavBar';
+import { NewsCard } from '@/components/custom/NewsCard/NewsCard';
+import { TimeSeriesChartClient } from '@/components/custom/TimeSeriesChart/TimeSeriesChart';
 
 export async function generateMetadata({
   params,
@@ -51,11 +42,10 @@ const SymbolResearchPage = ({
       className="flex flex-col-reverse gap-2 py-2 lg:grid-cols-4 lg:grid"
     >
       <div id="side-bar" className="flex flex-col gap-4">
-        <StockDetails symbol={params.symbol.toUpperCase()} />
         <NewsCard symbol={params.symbol.toUpperCase()} />
       </div>
       <div id="main-content" className="col-span-3">
-        <TimeSeriesChart symbol={params.symbol.toUpperCase()} />
+        <TimeSeriesChartClient symbol={params.symbol.toUpperCase()} />
       </div>
     </PageLayout>
   );

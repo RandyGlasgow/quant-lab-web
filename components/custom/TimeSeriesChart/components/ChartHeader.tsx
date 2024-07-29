@@ -1,23 +1,24 @@
 "use client";
 
-import React, { FC, useMemo } from "react";
+import { init } from 'next/dist/compiled/webpack/webpack';
+import { useSearchParams } from 'next/navigation';
+import React, { FC, useMemo } from 'react';
 
-import {
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Measure,
-  useSymbolTimeSeries,
-} from "@/lib/queries/useSymbolTimeSeries";
-import { useTickerInformation } from "@/lib/queries/useTickerInformation";
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Measure, useSymbolTimeSeries } from '@/lib/queries/useSymbolTimeSeries';
+import { useTickerInformation } from '@/lib/queries/useTickerInformation';
+import { ITickerDetails } from '@polygon.io/client-js';
 
-export const ChartHeader: FC<{ symbol: string; measure: Measure }> = ({
-  symbol,
-  measure,
-}) => {
-  const { data: symbolData } = useTickerInformation(symbol);
+export const ChartHeader: FC<{
+  symbol: string;
+  initialSymbolInfo: ITickerDetails;
+}> = ({ symbol, initialSymbolInfo }) => {
+  const queryParams = useSearchParams();
+  const measure = queryParams.get("measure") as Measure;
+  const { data: symbolData } = useTickerInformation(
+    symbol,
+    initialSymbolInfo
+  );
   const { data: chartData, isLoading } = useSymbolTimeSeries(
     symbol,
     measure
