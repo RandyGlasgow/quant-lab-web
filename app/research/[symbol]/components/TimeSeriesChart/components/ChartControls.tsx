@@ -28,9 +28,10 @@ export const ChartControls: React.FC<{
   const [hoveredMeasure, setHoveredMeasure] = useState<Measure>("1m");
   useSymbolTimeSeries(symbol, hoveredMeasure);
   return (
-    <CardContent className="flex justify-between pt-4 pb-0">
+    <CardContent className="flex justify-center p-4 md:justify-between">
       <span></span>
       <Tabs
+        className=""
         defaultValue={checkMeasure(queryParams.get("measure") as string)}
         onValueChange={(v) => {
           const url = new URL(window.location.href);
@@ -41,6 +42,7 @@ export const ChartControls: React.FC<{
         <TabsList>
           {TABS.map((tab) => (
             <TabsTrigger
+              className="text-xs data-[state='active']:bg-slate-300 hover:bg-slate-300 hover:shadow-md"
               key={tab}
               value={tab}
               onMouseEnter={() => {

@@ -45,7 +45,7 @@ export const ChartHeader: FC<{
   const arrayOpt = ["high", "low"] as const;
   return (
     <CardHeader className="flex flex-col items-stretch p-0 space-y-0 border-b sm:flex-row">
-      <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5 sm:py-6">
+      <div className="flex flex-col justify-center flex-1 gap-1 px-6 py-5">
         <CardTitle>{symbolData?.results?.name}</CardTitle>
         <CardDescription>
           {symbolData?.results?.description}
