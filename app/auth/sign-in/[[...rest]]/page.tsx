@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/core/layouts/Page";
+import { PageLayout } from "@/components/core/layouts/PageLayout";
 import { SignIn } from "@clerk/nextjs";
 
 export default function LoginPage() {
