@@ -37,7 +37,7 @@ const formatData = (data?: IAggsGroupedDaily["results"]) => {
 };
 export const ChartContent: FC<{ symbol: string }> = ({ symbol }) => {
   const queryParams = useSearchParams();
-  const measure = queryParams.get("measure") as Measure;
+  const measure = (queryParams.get("measure") as Measure) || "";
   const { data: chartData, isLoading } = useSymbolTimeSeries(
     symbol,
     measure

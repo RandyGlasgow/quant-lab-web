@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 
 import { getSymbolInfo } from '@/api/SymbolInfo/getSymbolInfo';
-import { getSymbolSnapshot } from "@/api/SymbolInfo/getSymbolSnapshot";
 import { NewsCard } from "@/app/research/[symbol]/components/NewsCard/NewsCard";
-import { TimeSeriesChartClient } from "@/app/research/[symbol]/components/TimeSeriesChart/TimeSeriesChart";
+import { TimeSeriesChart } from "@/app/research/[symbol]/components/TimeSeriesChart/TimeSeriesChart";
 import { PageContent } from "@/components/core/layouts/PageContent";
 import { PageLayout } from "@/components/core/layouts/PageLayout";
 import { GlobalNavBar } from '@/components/custom/GlobalNavBar/GlobalNavBar';
@@ -53,7 +52,7 @@ const SymbolResearchPage = async ({
             <NewsCard symbol={upperCaseSymbol} />
           </div>
           <div id="main-content" className="col-span-3">
-            <TimeSeriesChartClient symbol={upperCaseSymbol} />
+            <TimeSeriesChart symbol={upperCaseSymbol} />
           </div>
         </div>
       </PageContent>

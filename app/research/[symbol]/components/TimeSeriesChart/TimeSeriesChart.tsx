@@ -8,7 +8,7 @@ import { ChartContent } from './components/ChartContent';
 import { ChartControls } from './components/ChartControls';
 import { ChartHeader } from './components/ChartHeader';
 
-export const TimeSeriesChartClient: React.FC<{ symbol: string }> = async ({
+export const TimeSeriesChart: React.FC<{ symbol: string }> = async ({
   symbol,
 }) => {
   const data = await getSymbolInfo(symbol);
