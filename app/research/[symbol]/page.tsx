@@ -1,10 +1,16 @@
 import { Metadata } from 'next';
 
 import { getSymbolInfo } from '@/api/SymbolInfo/getSymbolInfo';
-import { PageLayout } from '@/components/core/layouts/page';
+import { getSymbolSnapshot } from "@/api/SymbolInfo/getSymbolSnapshot";
+import { NewsCard } from "@/app/research/[symbol]/components/NewsCard/NewsCard";
+import { TimeSeriesChartClient } from "@/app/research/[symbol]/components/TimeSeriesChart/TimeSeriesChart";
+import { PageLayout } from "@/components/core/layouts/Page";
+import { PageContent } from "@/components/core/layouts/PageContent";
 import { GlobalNavBar } from '@/components/custom/GlobalNavBar/GlobalNavBar';
-import { NewsCard } from '@/components/custom/NewsCard/NewsCard';
-import { TimeSeriesChartClient } from '@/components/custom/TimeSeriesChart/TimeSeriesChart';
+import { getTickerInformation } from "@/lib/api/getTickerInformation";
+import { numValOrFallback } from "@/lib/utils";
+
+import { PageHero } from "./components/PageHero/PageHero";
 
 export async function generateMetadata({
   params,
@@ -31,22 +37,26 @@ export async function generateMetadata({
     },
   };
 }
-const SymbolResearchPage = ({
+const SymbolResearchPage = async ({
   params,
 }: {
   params: { symbol: string };
 }) => {
+  const upperCaseSymbol = params.symbol.toUpperCase();
+
   return (
-    <PageLayout
-      navInjection={[<GlobalNavBar key={"global_nav_bar"} />]}
-      className="flex flex-col-reverse gap-2 py-2 lg:grid-cols-4 lg:grid"
-    >
-      <div id="side-bar" className="flex flex-col gap-4">
-        <NewsCard symbol={params.symbol.toUpperCase()} />
-      </div>
-      <div id="main-content" className="col-span-3">
-        <TimeSeriesChartClient symbol={params.symbol.toUpperCase()} />
-      </div>
+    <PageLayout navInjection={[<GlobalNavBar key={"global_nav_bar"} />]}>
+      <PageHero symbol={upperCaseSymbol} />
+      <PageContent>
+        <div className="flex flex-col-reverse gap-2 py-2 lg:grid-cols-4 lg:grid">
+          <div id="side-bar" className="flex flex-col gap-4">
+            <NewsCard symbol={upperCaseSymbol} />
+          </div>
+          <div id="main-content" className="col-span-3">
+            <TimeSeriesChartClient symbol={upperCaseSymbol} />
+          </div>
+        </div>
+      </PageContent>
     </PageLayout>
   );
 };

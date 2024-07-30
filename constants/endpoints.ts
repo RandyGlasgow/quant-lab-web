@@ -1,1 +1,1 @@
-export const API_URL = "https://go-quant-lab-production.up.railway.app";
+export const API_URL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;

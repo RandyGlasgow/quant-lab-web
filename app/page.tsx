@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { PageLayout } from "@/components/core/layouts/page";
+import { PageLayout } from "@/components/core/layouts/Page";
 import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
 import { StockStrip } from "@/components/custom/StockStrip/StockStrip";
 import {

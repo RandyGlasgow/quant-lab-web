@@ -18,7 +18,7 @@ export const PageLayout = ({
   return (
     <main className={cn("relative", "min-h-screen", "mx-auto")} {...rest}>
       {navInjection}
-      <div className={cn("w-full px-2 mx-auto bg-background", className)}>
+      <div className={cn("mx-auto bg-background", className)}>
         {children}
       </div>
     </main>

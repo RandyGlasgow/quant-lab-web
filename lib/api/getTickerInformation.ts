@@ -1,5 +1,7 @@
 import { API_URL } from '@/constants/endpoints';
 
 export const getTickerInformation = async (symbol: string) => {
-  return await fetch(`${API_URL}/tickers/${symbol}`);
+  const response = await fetch(`${API_URL}/v1/ticker/${symbol}`);
+  const data = await response.json();
+  return data;
 };

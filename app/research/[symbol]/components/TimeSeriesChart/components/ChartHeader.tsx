@@ -51,27 +51,6 @@ export const ChartHeader: FC<{
           {symbolData?.results?.description}
         </CardDescription>
       </div>
-      <div className="flex">
-        {arrayOpt.map((key) => {
-          return (
-            <span
-              key={key}
-              className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-            >
-              <span className="text-xs text-muted-foreground">
-                {key === "high" ? "High" : "Low"}
-              </span>
-              {isLoading ? (
-                <span className="w-40 h-10 text-lg font-bold leading-none sm:text-3xl bg-muted animate-pulse" />
-              ) : (
-                <span className="w-40 text-lg font-bold leading-none sm:text-3xl">
-                  ${total?.[key].toFixed(2).toLocaleString()}
-                </span>
-              )}
-            </span>
-          );
-        })}
-      </div>
     </CardHeader>
   );
 };
