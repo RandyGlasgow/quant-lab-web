@@ -11,7 +11,5 @@ export const useTickerInformation = (
     initialData,
     queryKey: ["ticker-info", symbol],
     staleTime: 1000 * 60 * 60 * 24,
-    queryFn: async () => {
-      return await getSymbolInfo(symbol);
-    },
+    queryFn: async () => await getSymbolInfo(symbol),
   });

@@ -12,7 +12,7 @@ export const TimeSeriesChart: React.FC<{ symbol: string }> = async ({
   symbol,
 }) => {
   const data = await getSymbolInfo(symbol);
-  const detailsData = await getSymbolSnapshot(symbol);
+  // const detailsData = await getSymbolSnapshot(symbol);
   return (
     <Card className="shadow-none">
       <ChartHeader symbol={symbol} initialSymbolInfo={data} />

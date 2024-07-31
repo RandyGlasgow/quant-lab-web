@@ -1,5 +1,5 @@
-import { API_URL } from '@/constants/endpoints';
-import { ISnapshotTickers } from '@polygon.io/client-js';
+import { API_URL } from "@/constants/endpoints";
+import { ISnapshotTickers } from "@polygon.io/client-js";
 
 export const getSymbolSnapshot = async (symbols: string) => {
   const response = await fetch(

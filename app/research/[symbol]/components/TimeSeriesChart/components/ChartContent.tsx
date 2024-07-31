@@ -8,7 +8,9 @@ import { CardContent } from '@/components/ui/card';
 import {
     ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent
 } from '@/components/ui/chart';
+import { useSymbolSnapshot } from "@/lib/queries/useSymbolSnapshot";
 import { Measure, useSymbolTimeSeries } from '@/lib/queries/useSymbolTimeSeries';
+import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 import { formatCurrency, numValOrFallback } from '@/lib/utils';
 import { IAggsGroupedDaily } from '@polygon.io/client-js';
 
@@ -42,15 +44,14 @@ export const ChartContent: FC<{ symbol: string }> = ({ symbol }) => {
     symbol,
     measure
   );
+  const { data } = useSymbolSnapshot(symbol);
 
   const formattedData = formatData(chartData);
 
   const showTime = measure.includes("d");
 
-  // is generally up trend bull
   const isTrendingUp =
-    numValOrFallback(chartData?.[1]?.c, 0) <
-    numValOrFallback(chartData?.[chartData.length - 1]?.c, 0);
+    numValOrFallback(data?.tickers?.[0]?.todaysChangePerc) >= 0;
 
   return (
     <CardContent className="px-2 sm:p-6">

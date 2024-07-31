@@ -44,7 +44,7 @@ const SymbolResearchPage = async ({
   const upperCaseSymbol = params.symbol.toUpperCase();
 
   return (
-    <PageLayout navInjection={[<GlobalNavBar key={"global_nav_bar"} />]}>
+    <PageLayout navInjection={[<GlobalNavBar key="global_nav_bar" />]}>
       <PageHero symbol={upperCaseSymbol} />
       <PageContent>
         <div className="flex flex-col-reverse gap-2 py-2 lg:grid-cols-4 lg:grid">
