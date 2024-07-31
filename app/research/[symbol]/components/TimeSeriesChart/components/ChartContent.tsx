@@ -13,6 +13,7 @@ import { Measure, useSymbolTimeSeries } from '@/lib/queries/useSymbolTimeSeries'
 import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 import { formatCurrency, numValOrFallback } from '@/lib/utils';
 import { IAggsGroupedDaily } from '@polygon.io/client-js';
+import { useQuery } from "@tanstack/react-query";
 
 const chartConfig = {
   high: {
@@ -44,11 +45,21 @@ export const ChartContent: FC<{ symbol: string }> = ({ symbol }) => {
     symbol,
     measure
   );
+
   const { data } = useSymbolSnapshot(symbol);
 
   const formattedData = formatData(chartData);
 
   const showTime = measure.includes("d");
+
+  const domainFloor = formattedData.reduce(
+    (acc, curr) => Math.min(acc, numValOrFallback(curr.Low, acc)),
+    Infinity
+  );
+  const domainCeiling = formattedData.reduce(
+    (acc, curr) => Math.max(acc, numValOrFallback(curr.High)),
+    -Infinity
+  );
 
   const isTrendingUp =
     numValOrFallback(data?.tickers?.[0]?.todaysChangePerc) >= 0;
@@ -82,7 +93,7 @@ export const ChartContent: FC<{ symbol: string }> = ({ symbol }) => {
             }}
           />
           <YAxis
-            domain={["auto", "auto"]}
+            domain={[domainFloor, domainCeiling]}
             tickLine={true}
             tickMargin={2}
             type="number"
@@ -104,7 +115,7 @@ export const ChartContent: FC<{ symbol: string }> = ({ symbol }) => {
                     : dayjs(value).format("ddd MMM DD, YYYY")
                 }
                 formatter={(value) =>
-                  formatCurrency(parseInt(value as string))
+                  formatCurrency(parseFloat(value as string))
                 }
               />
             }
