@@ -5,9 +5,7 @@ import { NewsCard } from "@/app/research/[symbol]/components/NewsCard/NewsCard";
 import { TimeSeriesChart } from "@/app/research/[symbol]/components/TimeSeriesChart/TimeSeriesChart";
 import { PageContent } from "@/components/core/layouts/PageContent";
 import { PageLayout } from "@/components/core/layouts/PageLayout";
-import { GlobalNavBar } from '@/components/custom/GlobalNavBar/GlobalNavBar';
-import { getTickerInformation } from "@/lib/api/getTickerInformation";
-import { numValOrFallback } from "@/lib/utils";
+import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
 
 import { PageHero } from "./components/PageHero/PageHero";
 
@@ -40,9 +38,9 @@ const SymbolResearchPage = async ({
   params,
 }: {
   params: { symbol: string };
+  searchParams: { measure?: string };
 }) => {
   const upperCaseSymbol = params.symbol.toUpperCase();
-
   return (
     <PageLayout navInjection={[<GlobalNavBar key="global_nav_bar" />]}>
       <PageHero symbol={upperCaseSymbol} />

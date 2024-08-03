@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import Link from 'next/link';
 import { FC } from 'react';
 
-import { Card } from '@/components/ui/card';
 import { ITickerNews } from '@polygon.io/client-js';
 
 export const Article: FC<ITickerNews["results"][number]> = ({

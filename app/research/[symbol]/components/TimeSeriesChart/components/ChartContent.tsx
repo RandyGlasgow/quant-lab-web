@@ -9,11 +9,12 @@ import {
     ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent
 } from '@/components/ui/chart';
 import { useSymbolSnapshot } from "@/lib/queries/useSymbolSnapshot";
-import { Measure, useSymbolTimeSeries } from '@/lib/queries/useSymbolTimeSeries';
-import { useTickerInformation } from "@/lib/queries/useTickerInformation";
+import {
+  Measure,
+  useSymbolTimeSeries,
+} from "@/lib/queries/useSymbolTimeSeries";
 import { formatCurrency, numValOrFallback } from '@/lib/utils';
-import { IAggsGroupedDaily } from '@polygon.io/client-js';
-import { useQuery } from "@tanstack/react-query";
+import { IAggsGroupedDaily } from "@polygon.io/client-js";
 
 const chartConfig = {
   high: {

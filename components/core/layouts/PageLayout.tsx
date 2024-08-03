@@ -1,9 +1,5 @@
 import React, { HTMLAttributes, ReactNode } from 'react';
 
-import {
-    NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
-    NavigationMenuList, NavigationMenuTrigger
-} from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 
 export const PageLayout = ({

@@ -24,17 +24,7 @@ export const ChartDetails: React.FC<{
 
   if (!data.tickers) return null;
 
-  const {
-    day,
-    lastQuote,
-    lastTrade,
-    min,
-    prevDay,
-    ticker,
-    todaysChange,
-    todaysChangePerc,
-    updated,
-  } = data.tickers[0];
+  const { prevDay } = data.tickers[0];
 
   return (
     <CardFooter className="grid grid-cols-4 gap-2 pt-8 pb-4 text-sm bg-secondary">

@@ -1,4 +1,5 @@
 "use client";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FC } from "react";
 
 import {
@@ -8,16 +9,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getTickerNews } from "@/lib/api/getTickerNews";
-import { ITickerNews } from "@polygon.io/client-js";
-import { useQuery } from "@tanstack/react-query";
 
 export const ArticleFilter: FC<{
-  setFilter: (filter: string) => void;
   options: string[];
-}> = ({ options, setFilter }) => {
+}> = ({ options }) => {
+  const router = useRouter();
+
+  // using window
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleFilterChange = (filter: string) => {
+    const url = new URL(pathname, window.location.origin);
+
+    if (filter === "custom_name") {
+      url.searchParams.delete("news_filter");
+    } else {
+      url.searchParams.set("news_filter", encodeURI(filter));
+    }
+    router.replace(url.toString(), { scroll: false });
+  };
+
   return (
-    <Select onValueChange={setFilter}>
+    <Select onValueChange={handleFilterChange}>
       <SelectTrigger className="w-52">
         <SelectValue placeholder="All" />
       </SelectTrigger>

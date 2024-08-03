@@ -1,6 +1,4 @@
-import { init } from "next/dist/compiled/webpack/webpack";
-import { useSearchParams } from "next/navigation";
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 
 import { getSymbolInfo } from "@/api/SymbolInfo/getSymbolInfo";
 import {
@@ -8,11 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Measure,
-  useSymbolTimeSeries,
-} from "@/lib/queries/useSymbolTimeSeries";
-import { useTickerInformation } from "@/lib/queries/useTickerInformation";
 import { ITickerDetails } from "@polygon.io/client-js";
 
 export const ChartHeader: FC<{
