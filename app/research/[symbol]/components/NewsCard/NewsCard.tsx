@@ -14,17 +14,7 @@ import { ArticleElement } from "./components/ArticleElement";
 type NewsCardProps = {
   symbol: string;
 };
-export async function generateMetadata({
-  symbol,
-}: NewsCardProps): Promise<Metadata> {
-  console.log("Generating metadata for NewsCard");
-  console.log(symbol);
-  const newsData = await getTickerNews(symbol);
 
-  return {
-    title: `News for ${symbol}`,
-  };
-}
 export const NewsCard: FC<NewsCardProps> = async ({ symbol }) => {
   const newsData = await getTickerNews(symbol);
 

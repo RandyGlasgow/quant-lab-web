@@ -1,5 +1,5 @@
-import { ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,4 +18,9 @@ export const formatCurrency = (val: number | undefined) => {
     currency: "USD",
     compactDisplay: "long",
   }).format(numValOrFallback(val));
+};
+
+export const getIsWeekend = () => {
+  const day = new Date().getDay();
+  return day === 6 || day === 0;
 };

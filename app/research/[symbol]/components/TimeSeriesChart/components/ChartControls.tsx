@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Measure, useSymbolTimeSeries } from '@/lib/queries/useSymbolTimeSeries';
+import { getIsWeekend } from "@/lib/utils";
 
 const TABS = ["1d", "5d", "1m", "3m", "6m", "1y", "5y"] as Measure[];
 
@@ -27,6 +28,16 @@ export const ChartControls: React.FC<{
   );
   const [hoveredMeasure, setHoveredMeasure] = useState<Measure>("1m");
   useSymbolTimeSeries(symbol, hoveredMeasure);
+
+
+  const isWeekend = getIsWeekend();
+  const availableMeasures = TABS.filter((tab) => {
+    if (isWeekend) {
+      return tab !== "1d";
+    }
+    return true;
+  });
+
   return (
     <CardContent className="flex justify-center p-4 md:justify-between">
       <span></span>
@@ -40,7 +51,7 @@ export const ChartControls: React.FC<{
         }}
       >
         <TabsList>
-          {TABS.map((tab) => (
+          {availableMeasures.map((tab) => (
             <TabsTrigger
               className="text-xs data-[state='active']:bg-slate-300 hover:bg-slate-300 hover:shadow-md"
               key={tab}
