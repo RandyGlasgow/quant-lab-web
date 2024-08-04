@@ -9,14 +9,11 @@ import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
 import { NewsCard } from "./components/NewsCard/NewsCard";
 import { PageHero } from "./components/PageHero/PageHero";
 
-export async function generateMetadata(
-  {
-    params,
-  }: {
-    params: { symbol: string };
-  },
-  meta
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { symbol: string };
+}): Promise<Metadata> {
   const data = await getSymbolInfo(params.symbol.toUpperCase());
   return {
     title: `${params.symbol.toUpperCase()}: ${data.results?.name}`,
@@ -25,7 +22,6 @@ export async function generateMetadata(
     // add image
     // add favicon
 
-    ...meta,
     openGraph: {
       images: [
         {
