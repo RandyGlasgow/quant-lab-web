@@ -1,19 +1,22 @@
 import { Metadata } from 'next';
 
 import { getSymbolInfo } from '@/api/SymbolInfo/getSymbolInfo';
-import { NewsCard } from "@/app/research/[symbol]/components/NewsCard/NewsCard";
 import { TimeSeriesChart } from "@/app/research/[symbol]/components/TimeSeriesChart/TimeSeriesChart";
 import { PageContent } from "@/components/core/layouts/PageContent";
 import { PageLayout } from "@/components/core/layouts/PageLayout";
 import { GlobalNavBar } from "@/components/custom/GlobalNavBar/GlobalNavBar";
 
+import { NewsCard } from "./components/NewsCard/NewsCard";
 import { PageHero } from "./components/PageHero/PageHero";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { symbol: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  {
+    params,
+  }: {
+    params: { symbol: string };
+  },
+  meta
+): Promise<Metadata> {
   const data = await getSymbolInfo(params.symbol.toUpperCase());
   return {
     title: `${params.symbol.toUpperCase()}: ${data.results?.name}`,
@@ -22,6 +25,7 @@ export async function generateMetadata({
     // add image
     // add favicon
 
+    ...meta,
     openGraph: {
       images: [
         {
