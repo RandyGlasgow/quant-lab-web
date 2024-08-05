@@ -11,9 +11,9 @@ export const PageHero: FC<{ symbol: string }> = async ({ symbol }) => {
   const pageData = await getSymbolInfo(upperCaseSymbol);
   const tickerInfo = await getSymbolSnapshot(upperCaseSymbol);
   const { tickers } = tickerInfo!;
-  const { todaysChangePerc } = tickers?.[0]!;
+  const { todaysChange } = tickers?.[0]!;
 
-  const isPositive = numValOrFallback(todaysChangePerc) > 0;
+  const isPositive = numValOrFallback(todaysChange) > 0;
 
   return (
     <div
