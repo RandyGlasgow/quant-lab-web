@@ -13,7 +13,7 @@ export const PageHero: FC<{ symbol: string }> = async ({ symbol }) => {
   const { tickers } = tickerInfo!;
   const { todaysChangePerc } = tickers?.[0]!;
 
-  const isPositive = numValOrFallback(todaysChangePerc) >= 0;
+  const isPositive = numValOrFallback(todaysChangePerc) > 0;
 
   return (
     <div
